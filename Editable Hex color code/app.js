@@ -14,9 +14,6 @@ const output = document.getElementById("output");
 const copyBtn = document.getElementById("copyBtn");
 const createToasts = document.querySelector(".createToast");
 
-// globa
-let isDivHave = null;
-
 // change handler
 const changeBtnHandler = () => {
   rootDiv.style.backgroundColor = generateHexColorCode();
@@ -53,12 +50,16 @@ const createToaster = (message, duration) => {
 
 // copy button handler
 const copyBtnHandler = async () => {
-  await window.navigator.clipboard
-    .writeText(output.value)
-    .then(() =>
-      createToaster(`${output.value} Color code successfully copied🔥`)
-    )
-    .catch(() => createToaster("Fail to copy color code😒"));
+  if (checkHexCodeValid(output.value)) {
+    await window.navigator.clipboard
+      .writeText(output.value)
+      .then(() =>
+        createToaster(`${output.value} Color code successfully copied🔥`)
+      )
+      .catch(() => createToaster("Fail to copy color code😒"));
+  } else {
+    createToaster(`Invalid Colore code!`);
+  }
 };
 
 copyBtn.addEventListener("click", copyBtnHandler);
@@ -76,4 +77,24 @@ const generateHexColorCode = () => {
   return hexColor;
 };
 
-console.log(isDivHave);
+// when user change anything on our code input
+output.addEventListener("keyup", (event) => {
+  const color = event.target.value;
+  if (color && checkHexCodeValid(color)) {
+    rootDiv.style.backgroundColor = color;
+  }
+});
+
+// check the user inputed hex code is valid or not
+/**
+ *
+ * @param {string} colorCode
+ */
+const checkHexCodeValid = (colorCode) => {
+  if (colorCode.length !== 7) return false;
+  if (colorCode[0] !== "#") return false;
+
+  colorCode = colorCode.substring(1);
+  const regexPartern = /^[0-9A-Fa-f]{6}$/i;
+  return regexPartern.test(colorCode);
+};
