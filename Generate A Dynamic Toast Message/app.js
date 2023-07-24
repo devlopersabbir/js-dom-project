@@ -14,6 +14,9 @@ const output = document.getElementById("output");
 const copyBtn = document.getElementById("copyBtn");
 const createToasts = document.querySelector(".createToast");
 
+// globa
+let isDivHave = null;
+
 // change handler
 const changeBtnHandler = () => {
   rootDiv.style.backgroundColor = generateHexColorCode();
@@ -26,15 +29,25 @@ const createToaster = (message, duration) => {
   createToastElement.className =
     "toast__message__with__message toast__animation_in";
   createToastElement.innerText = message ?? "Coped";
+  isDivHave = true;
   document.body.appendChild(createToastElement);
 
   createToastElement.addEventListener("click", () => {
-    createToastElement.className = "toast__animation_out";
+    createToastElement.classList.remove("toast__animation_in");
+    createToastElement.classList.add("toast__animation_out");
+    createToastElement.addEventListener("animationend", () => {
+      createToastElement.remove();
+      isDivHave = null;
+    });
   });
 
   // disbaled toaster buy setTimeout
   setTimeout(() => {
     createToastElement.className = "toast__animation_out";
+    createToastElement.addEventListener("animationend", () => {
+      createToastElement.remove();
+      isDivHave = null;
+    });
   }, duration ?? 3000);
 };
 
@@ -42,8 +55,18 @@ const createToaster = (message, duration) => {
 const copyBtnHandler = async () => {
   await window.navigator.clipboard
     .writeText(output.value)
-    .then(createToaster(`#${output.value} Color code successfully copied🔥`))
-    .catch(() => createToaster("Fail to copy color code😒"));
+    .then(() => {
+      if (isDivHave !== null) {
+        isDivHave = null;
+        createToaster(`${output.value} Color code successfully copied🔥`);
+      }
+    })
+    .catch(() => {
+      if (isDivHave !== null) {
+        isDivHave = null;
+        createToaster("Fail to copy color code😒");
+      }
+    });
 };
 
 copyBtn.addEventListener("click", copyBtnHandler);
