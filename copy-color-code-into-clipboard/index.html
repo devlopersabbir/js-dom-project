@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="w-full h-screen bg-red-200 flex justify-center items-center flex-col text-center" id="rootDiv">
+      <h1 class="text-5xl text-center mb-5">Change the Background Color Clicking the button</h1>
+
+      <div class="flex flex-row gap-2 items-center justify-center">
+        <input class="px-2 py-1 text-lg text-black mb-3" disabled id="output" />
+        <button id="copyBtn" class="bg-red-600 px-2 py-1">Copy</button>
+      </div>
+      <button id="changeBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-xl">Change Color</button>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
